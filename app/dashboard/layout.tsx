@@ -200,7 +200,7 @@ export default function DashboardLayout({
               <Sidebar>
                 <SidebarContent className="pt-16">
                   {/* Collapse Toggle Always Visible */}
-                  <div className="flex justify-end pr-2 mb-4">
+                  {/* <div className="flex justify-end pr-2 mb-4">
                     <button
                       onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
                       className="p-1 hover:bg-gray-200 rounded transition"
@@ -211,7 +211,7 @@ export default function DashboardLayout({
                         <PanelRightClose className="w-4 h-4" />
                       )}
                     </button>
-                  </div>
+                  </div> */}
 
                   {/* Menu Items (hidden if collapsed) */}
                   {!isSidebarCollapsed && (
