@@ -43,6 +43,8 @@ import {
   Trash,
   Menu,
   X,
+  PanelRightOpen,
+  PanelRightClose,
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
@@ -58,6 +60,7 @@ export default function DashboardLayout({
   const router = useRouter();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const handleSignOut = async () => {
     await signOut({ callbackUrl: "/" });
@@ -76,8 +79,20 @@ export default function DashboardLayout({
       <div className="flex flex-col min-h-screen w-screen">
         {/* 🔹 Top Navbar */}
         <div className="w-full h-16 bg-white border-b px-4 flex items-center justify-between shadow-sm">
+          <div className="hidden md:block absolute left-0 top-0 z-40 h-16 w-10 flex items-center justify-center">
+            <button
+              onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+              className="p-1 pl-3 pt-2 hover:bg-gray-200 rounded transition"
+            >
+              {isSidebarCollapsed ? (
+                <PanelRightOpen className="w-4 h-4" />
+              ) : (
+                <PanelRightClose className="w-4 h-4" />
+              )}
+            </button>
+          </div>
+
           <div className="flex items-center gap-3">
-            {/* Mobile menu toggle */}
             <button
               className="md:hidden"
               onClick={() => setIsSidebarOpen(true)}
@@ -86,8 +101,6 @@ export default function DashboardLayout({
             </button>
             <span className="text-lg font-semibold">ระบบรายงานฝึกงาน</span>
           </div>
-
-          {/* User Menu */}
           <div className="flex items-center gap-2">
             {status === "loading" ? (
               <>
@@ -175,62 +188,86 @@ export default function DashboardLayout({
           </div>
         </div>
 
+        {/* 🔹 Main Content with Sidebar */}
         <div className="flex flex-1 overflow-hidden">
-          {/* 🔹 Sidebar: hidden on mobile, visible on desktop */}
-          <div className="hidden md:block">
-            <Sidebar>
-              <SidebarContent className="pt-16">
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={pathname === "/dashboard"}
+          {/* Sidebar (Desktop) */}
+          {!isSidebarCollapsed && (
+            <div
+              className={`hidden md:flex transition-all duration-300 ${
+                isSidebarCollapsed ? "w-12" : "w-64"
+              } bg-white border-r`}
+            >
+              <Sidebar>
+                <SidebarContent className="pt-16">
+                  {/* Collapse Toggle Always Visible */}
+                  <div className="flex justify-end pr-2 mb-4">
+                    <button
+                      onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+                      className="p-1 hover:bg-gray-200 rounded transition"
                     >
-                      <Link href="/dashboard">
-                        <LayoutDashboard className="mr-2 h-4 w-4" />
-                        แดชบอร์ด
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={pathname === "/dashboard/profile"}
-                    >
-                      <Link href="/dashboard/profile">
-                        <UserCircle className="mr-2 h-4 w-4" />
-                        ข้อมูลส่วนตัว
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={pathname === "/dashboard/reports"}
-                    >
-                      <Link href="/dashboard/reports">
-                        <FileText className="mr-2 h-4 w-4" />
-                        รายงานประจำสัปดาห์
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={pathname === "/dashboard/resources"}
-                    >
-                      <Link href="/dashboard/resources">
-                        <FileText className="mr-2 h-4 w-4" />
-                        เอกสารฝึกงาน
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarContent>
-            </Sidebar>
-          </div>
+                      {isSidebarCollapsed ? (
+                        <PanelRightOpen className="w-4 h-4" />
+                      ) : (
+                        <PanelRightClose className="w-4 h-4" />
+                      )}
+                    </button>
+                  </div>
 
-          {/* 🔹 Mobile Sidebar (overlay when open) */}
+                  {/* Menu Items (hidden if collapsed) */}
+                  {!isSidebarCollapsed && (
+                    <SidebarMenu>
+                      <SidebarMenuItem>
+                        <SidebarMenuButton
+                          asChild
+                          isActive={pathname === "/dashboard"}
+                        >
+                          <Link href="/dashboard">
+                            <LayoutDashboard className="mr-2 h-4 w-4" />
+                            แดชบอร์ด
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                      <SidebarMenuItem>
+                        <SidebarMenuButton
+                          asChild
+                          isActive={pathname === "/dashboard/profile"}
+                        >
+                          <Link href="/dashboard/profile">
+                            <UserCircle className="mr-2 h-4 w-4" />
+                            ข้อมูลส่วนตัว
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                      <SidebarMenuItem>
+                        <SidebarMenuButton
+                          asChild
+                          isActive={pathname === "/dashboard/reports"}
+                        >
+                          <Link href="/dashboard/reports">
+                            <FileText className="mr-2 h-4 w-4" />
+                            รายงานประจำสัปดาห์
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                      <SidebarMenuItem>
+                        <SidebarMenuButton
+                          asChild
+                          isActive={pathname === "/dashboard/resources"}
+                        >
+                          <Link href="/dashboard/resources">
+                            <FileText className="mr-2 h-4 w-4" />
+                            เอกสารฝึกงาน
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    </SidebarMenu>
+                  )}
+                </SidebarContent>
+              </Sidebar>
+            </div>
+          )}
+
+          {/* Sidebar (Mobile) */}
           {isSidebarOpen && (
             <div className="fixed inset-0 z-50 bg-black bg-opacity-40 md:hidden">
               <div className="w-64 h-full bg-white shadow-lg">
@@ -283,7 +320,11 @@ export default function DashboardLayout({
           )}
 
           {/* Page content */}
-          <main className="flex-1 overflow-auto bg-gray-50">
+          <main
+            className={`flex-1 overflow-auto bg-gray-50 transition-all duration-300 ${
+              isSidebarCollapsed ? "md:ml-0" : ""
+            }`}
+          >
             <div className="w-full min-h-full py-6 px-4 md:px-6">
               {children}
             </div>
