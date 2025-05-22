@@ -292,7 +292,7 @@ export default function ReportsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">
             {language === "th" ? "รายงานประจำสัปดาห์" : "Bi-Weekly Reports"}
@@ -303,7 +303,8 @@ export default function ReportsPage() {
               : "Record your internship activities and hours"}
           </p>
         </div>
-        <div className="flex items-center gap-4">
+
+        <div className="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-2 sm:gap-4 w-full md:w-auto">
           <div className="flex items-center space-x-2">
             <Switch
               id="language-toggle"
@@ -315,10 +316,11 @@ export default function ReportsPage() {
               {language === "th" ? "EN" : "TH"}
             </Label>
           </div>
+
           <Button
             variant="outline"
             onClick={togglePreview}
-            className="hidden md:flex w-full sm:w-auto"
+            className="w-full sm:w-auto"
           >
             {showPreview ? (
               <>
@@ -333,7 +335,11 @@ export default function ReportsPage() {
             )}
           </Button>
 
-          <Button onClick={addReport} disabled={isSaving}>
+          <Button
+            onClick={addReport}
+            disabled={isSaving}
+            className="w-full sm:w-auto"
+          >
             {isSaving ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : (
