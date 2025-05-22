@@ -27,7 +27,14 @@ export default function SignUp() {
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
-    await signIn("google", { callbackUrl: "/dashboard" });
+    try {
+      await signIn("google", {
+        callbackUrl: "/dashboard", // or your desired path
+      });
+    } catch (error) {
+      console.error("Google sign-in error:", error);
+      setIsLoading(false);
+    }
   };
 
   return (

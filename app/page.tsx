@@ -48,7 +48,7 @@ export default function LandingPage() {
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
                   <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                    ระบบรายงานฝึกงานสำหรับนิสิตจุฬาฯ
+                    ระบบสร้างรายงานฝึกงานสำหรับนิสิตจุฬาฯ
                   </h1>
                   <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                     จัดการรายงานฝึกงานของคุณได้อย่างง่ายดาย
@@ -56,8 +56,11 @@ export default function LandingPage() {
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                  <Link href="/api/auth/signin">
+                  {/* <Link href="/api/auth/signin">
                     <Button>สมัครสมาชิก</Button>
+                  </Link> */}
+                  <Link href="/api/auth/signin">
+                    <Button>เข้าสู่ระบบ</Button>
                   </Link>
                   {/* <Link href="/api/auth/signin?provider=google">
                     <Button variant="outline">
@@ -82,7 +85,7 @@ export default function LandingPage() {
                   </Link> */}
                 </div>
               </div>
-              <div className="flex items-center justify-center">
+              {/* <div className="flex items-center justify-center">
                 <img
                   src="/placeholder.svg?height=400&width=400"
                   alt="Internship Report"
@@ -90,7 +93,7 @@ export default function LandingPage() {
                   width="400"
                   height="400"
                 />
-              </div>
+              </div> */}
             </div>
           </div>
         </section>
@@ -106,7 +109,7 @@ export default function LandingPage() {
                 </p>
               </div>
             </div>
-            <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 py-12 md:grid-cols-3">
+            <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 py-12 md:grid-cols-2">
               <div className="flex flex-col items-center space-y-2 rounded-lg border p-4">
                 <div className="rounded-full bg-gray-100 p-2">
                   <svg
@@ -154,7 +157,7 @@ export default function LandingPage() {
                   ติดตามจำนวนชั่วโมงการฝึกงานทั้งหมดได้อย่างอัตโนมัติ
                 </p>
               </div>
-              <div className="flex flex-col items-center space-y-2 rounded-lg border p-4">
+              {/* <div className="flex flex-col items-center space-y-2 rounded-lg border p-4">
                 <div className="rounded-full bg-gray-100 p-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -177,7 +180,7 @@ export default function LandingPage() {
                 <p className="text-center text-gray-500">
                   ส่งออกรายงานเป็นไฟล์ DOCX หรือ PDF ได้ทันที
                 </p>
-              </div>
+              </div> */}
             </div>
           </div>
         </section>

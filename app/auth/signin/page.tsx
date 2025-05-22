@@ -93,7 +93,7 @@ export default function SignIn() {
             เข้าสู่ระบบด้วย Google
           </Button> */}
         </div>
-        <div className="relative">
+        {/* <div className="relative">
           <div className="absolute inset-0 flex items-center">
             <span className="w-full border-t" />
           </div>
@@ -102,7 +102,7 @@ export default function SignIn() {
               หรือ
             </span>
           </div>
-        </div>
+        </div> */}
         {/* <div className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email">อีเมล</Label>
@@ -130,7 +130,7 @@ export default function SignIn() {
           </Button>
         </div> */}
       </CardContent>
-      <CardFooter className="flex flex-col space-y-2">
+      {/* <CardFooter className="flex flex-col space-y-2">
         <div className="text-sm text-center text-muted-foreground">
           ยังไม่มีบัญชี?{" "}
           <Link
@@ -140,7 +140,7 @@ export default function SignIn() {
             สมัครสมาชิก
           </Link>
         </div>
-      </CardFooter>
+      </CardFooter> */}
     </Card>
   );
 }
