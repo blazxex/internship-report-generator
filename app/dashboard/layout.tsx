@@ -269,8 +269,14 @@ export default function DashboardLayout({
 
           {/* Sidebar (Mobile) */}
           {isSidebarOpen && (
-            <div className="fixed inset-0 z-50 bg-black bg-opacity-40 md:hidden">
-              <div className="w-64 h-full bg-white shadow-lg">
+            <div
+              className="fixed inset-0 z-50 bg-black bg-opacity-40 md:hidden"
+              onClick={() => setIsSidebarOpen(false)}
+            >
+              <div
+                className="w-64 h-full bg-white shadow-lg"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <div className="flex items-center justify-between p-4 border-b">
                   <span className="font-semibold text-lg">เมนู</span>
                   <Button
