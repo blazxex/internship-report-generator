@@ -99,7 +99,9 @@ export default function DashboardLayout({
             >
               <Menu className="h-6 w-6" />
             </button>
-            <span className="text-lg font-semibold">ระบบรายงานฝึกงาน</span>
+            <Link href="/dashboard/profile" className="flex items-center">
+              <span className="text-lg font-semibold">ระบบรายงานฝึกงาน</span>
+            </Link>
           </div>
           <div className="flex items-center gap-2">
             {status === "loading" ? (
