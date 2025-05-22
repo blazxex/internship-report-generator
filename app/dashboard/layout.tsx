@@ -292,6 +292,7 @@ export default function DashboardLayout({
                     <Link
                       href="/dashboard"
                       className="block px-4 py-2 hover:bg-gray-100"
+                      onClick={() => setIsSidebarOpen(false)}
                     >
                       แดชบอร์ด
                     </Link>
@@ -300,6 +301,7 @@ export default function DashboardLayout({
                     <Link
                       href="/dashboard/profile"
                       className="block px-4 py-2 hover:bg-gray-100"
+                      onClick={() => setIsSidebarOpen(false)}
                     >
                       ข้อมูลส่วนตัว
                     </Link>
@@ -308,6 +310,7 @@ export default function DashboardLayout({
                     <Link
                       href="/dashboard/reports"
                       className="block px-4 py-2 hover:bg-gray-100"
+                      onClick={() => setIsSidebarOpen(false)}
                     >
                       รายงานประจำสัปดาห์
                     </Link>
@@ -316,6 +319,7 @@ export default function DashboardLayout({
                     <Link
                       href="/dashboard/resources"
                       className="block px-4 py-2 hover:bg-gray-100"
+                      onClick={() => setIsSidebarOpen(false)}
                     >
                       เอกสารฝึกงาน
                     </Link>
