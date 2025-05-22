@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import GoogleSignInButton from "@/components/GoogleSignInButton";
 export default function LandingPage() {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col font-sukhumvit">
       <header className="border-b">
         <div className="max-w-screen-xl mx-auto flex h-16 items-center px-4 sm:px-6 lg:px-8">
           <div className="flex items-center space-x-2">
@@ -48,7 +48,7 @@ export default function LandingPage() {
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
                   <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                    ระบบสร้างรายงานฝึกงานสำหรับนิสิตจุฬาฯ
+                    ระบบสร้างรายงานฝึกงาน
                   </h1>
                   <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                     จัดการรายงานฝึกงานของคุณได้อย่างง่ายดาย

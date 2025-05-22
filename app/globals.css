@@ -11,6 +11,20 @@ body {
     text-wrap: balance;
   }
 }
+@font-face {
+  font-family: "Sukhumvit";
+  src: url("/fonts/Sukhumvit.ttf") format("truetype");
+  font-display: swap;
+}
+
+.font-sukhumvit {
+  font-family: "Sukhumvit", system-ui, sans-serif;
+}
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
 
 @layer base {
   :root {
@@ -90,5 +104,14 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+  }
+  @font-face {
+    font-family: "Sukhumvit";
+    src: url("/fonts/Sukhumvit.ttf") format("truetype");
+    font-display: swap;
+  }
+
+  html {
+    font-family: "Sukhumvit", Arial, Helvetica, sans-serif;
   }
 }

@@ -76,7 +76,7 @@ export default function DashboardLayout({
 
   return (
     <SidebarProvider>
-      <div className="flex flex-col min-h-screen w-screen">
+      <div className="flex flex-col min-h-screen w-screen font-sukhumvit">
         {/* 🔹 Top Navbar */}
         <div className="w-full h-16 bg-white border-b px-4 flex items-center justify-between shadow-sm">
           <div className="hidden md:block absolute left-0 top-0 z-40 h-16 w-10 flex items-center justify-center">

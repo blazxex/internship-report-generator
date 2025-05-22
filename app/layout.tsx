@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="th">
-      <body className={inter.className}>
+      <body className={`${inter.className} font-sukhumvit`}>
         <NextAuthProvider>
           <ThemeProvider
             attribute="class"

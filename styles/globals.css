@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Sukhumvit";
+  src: url("/fonts/Sukhumvit.ttf") format("truetype");
+  font-display: swap;
+}
+
+/* Optional utility class */
+.font-sukhumvit {
+  font-family: "Sukhumvit", system-ui, sans-serif;
+}
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -90,5 +105,14 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+  }
+  @font-face {
+    font-family: "Sukhumvit";
+    src: url("/fonts/Sukhumvit.ttf") format("truetype");
+    font-display: swap;
+  }
+
+  html {
+    font-family: "Sukhumvit", Arial, Helvetica, sans-serif;
   }
 }
