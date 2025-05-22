@@ -40,11 +40,19 @@ const formatDate = (dateString: string, language: "th" | "en") => {
     const date = parseISO(dateString);
     return language === "th"
       ? format(date, "dd/MM/yyyy", { locale: th })
-      : format(date, "MM/dd/yyyy");
+      : format(date, "dd/MM/yyyy");
   } catch (e) {
     return dateString;
   }
 };
+function arrayBufferToBase64(buffer: ArrayBuffer): string {
+  let binary = "";
+  const bytes = new Uint8Array(buffer);
+  for (let i = 0; i < bytes.byteLength; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return window.btoa(binary);
+}
 const wrapText = (text: string) =>
   new Paragraph({
     children: [
@@ -58,138 +66,173 @@ const wrapText = (text: string) =>
   });
 
 // Export to PDF
-export const exportToPdf = (
+export const exportToPdf = async (
   report: Report,
-  profile: Profile,
+  profile: {
+    firstName: string;
+    lastName: string;
+    studentId: string;
+    companyName: string;
+    position: string;
+    startDate: string;
+    endDate: string;
+    supervisorName: string;
+    supervisorPosition: string;
+    department: string;
+  },
   language: "th" | "en",
   previousTotalHours: number
-): void => {
-  const doc = new jsPDF();
-  doc.setFont("THSarabunNew", "normal"); // Use a Thai-compatible font if needed
-  doc.setFontSize(16);
-
+) => {
+  // 1) Create the PDF
+  const doc = new jsPDF({ unit: "pt", format: "a4" });
   const pageWidth = doc.internal.pageSize.getWidth();
+  const margin = 40;
 
-  // Header
+  // 2) Fetch the TTF from /public and embed it
+  const res = await fetch("/Sarabun-Regular.ttf");
+  const buffer = await res.arrayBuffer();
+  const base64 = arrayBufferToBase64(buffer);
+  doc.addFileToVFS("Sarabun-Regular.ttf", base64);
+  doc.addFont("Sarabun-Regular.ttf", "Sarabun", "normal");
+  doc.setFont("Sarabun", "normal");
+
+  // 3) Header
+  doc.setFontSize(16);
   doc.text(
     language === "th"
       ? "รายงานการฝึกงานทุกสองสัปดาห์"
       : "Internship Bi-weekly Report",
     pageWidth / 2,
-    20,
+    60,
     { align: "center" }
   );
   doc.setFontSize(12);
-  doc.text(profile.department, pageWidth / 2, 30, { align: "center" });
+  doc.text(profile.department, pageWidth / 2, 80, { align: "center" });
   doc.text(
     language === "th" ? `ฉบับที่ ${report.id}` : `No. ${report.id}`,
     pageWidth / 2,
-    40,
+    100,
     { align: "center" }
   );
 
-  // Student Info
+  // 4) Student info
   doc.setFontSize(11);
   doc.text(
-    `${language === "th" ? "ชื่อ - สกุล" : "Name - Surname"}: ${
+    `${language === "th" ? "ชื่อ – สกุล" : "Name - Surname"}: ${
       profile.firstName
     } ${profile.lastName}`,
-    20,
-    55
+    margin,
+    130
   );
   doc.text(
     `${language === "th" ? "รหัสนิสิต" : "Student ID"}: ${profile.studentId}`,
-    20,
-    63
+    margin,
+    150
   );
   doc.text(
     `${
-      language === "th" ? "ชื่อหน่วยงานที่ฝึกงาน" : "Internship institution"
+      language === "th" ? "ชื่อหน่วยงานที่ฝึกงาน" : "Internship Institution"
     }: ${profile.companyName}`,
-    20,
-    71
+    margin,
+    170
   );
 
-  // Table headers
+  // 5) Main entries table
   const headers = [
     language === "th"
       ? ["วัน/เดือน/ปี", "จำนวนชม.", "งานที่ปฏิบัติโดยย่อ", "ลงนาม(นิสิต)"]
       : ["Date", "Hours", "Description", "Student Signature"],
   ];
+  const data = report.entries.map((e) => [
+    formatDate(e.date, language),
+    e.hours,
+    e.description,
+    "",
+  ]);
+  while (data.length < 15) data.push(["", "", "", ""]);
 
-  // Pad rows to 15 like DOCX
-  const maxRows = 15;
-  const data = [
-    ...report.entries.map((entry) => [
-      formatDate(entry.date, language),
-      entry.hours,
-      entry.description,
-      "",
-    ]),
-  ];
-
-  while (data.length < maxRows) {
-    data.push(["", "", "", ""]);
-  }
-
-  autoTable(doc, {
+  (autoTable as any)(doc, {
     head: headers,
     body: data,
-    startY: 80,
+    startY: 190,
     theme: "grid",
+    headStyles: {
+      fillColor: null,
+      textColor: [0, 0, 0],
+      lineColor: [0, 0, 0],
+      lineWidth: 0.5,
+      halign: "center",
+      valign: "middle",
+      font: "Sarabun",
+    },
+    bodyStyles: {
+      fillColor: null,
+      textColor: [0, 0, 0],
+      lineColor: [0, 0, 0],
+      lineWidth: 0.5,
+      valign: "middle",
+      overflow: "linebreak",
+      font: "Sarabun",
+    },
     styles: {
       fontSize: 10,
       cellPadding: 4,
-      valign: "middle",
     },
     columnStyles: {
-      0: { cellWidth: 30 },
-      1: { cellWidth: 20, halign: "center" },
-      2: { cellWidth: 100 },
-      3: { cellWidth: 30 },
+      0: { cellWidth: 80, halign: "center" },
+      1: { cellWidth: 50, halign: "center" },
+      2: {
+        cellWidth:
+          pageWidth - margin * 2 - /*col0*/ 80 - /*col1*/ 50 - /*col3*/ 80,
+      },
+      3: { cellWidth: 80, halign: "center" },
     },
-  });
+    margin: { left: margin, right: margin },
+  } as UserOptions);
 
-  const summaryY = (doc as any).lastAutoTable.finalY + 10;
-
-  // Summary Table
-  autoTable(doc, {
+  // 6) Summary table
+  const summaryY = (doc as any).lastAutoTable.finalY + 30;
+  (autoTable as any)(doc, {
+    startY: summaryY,
+    theme: "grid",
     body: [
       [
         language === "th"
-          ? "จำนวนชม.ฝึกงานทั้งหมด\nในรายงานฉบับนี้"
+          ? "จำนวนชม.ทั้งหมด\nในรายงานฉบับนี้"
           : "Total hours\nin this report",
         String(report.totalHours),
       ],
       [
         language === "th"
-          ? "จำนวนชม.ฝึกงานทั้งหมด\nจากรายงานฉบับก่อนหน้า"
+          ? "จำนวนชม.ทั้งหมด\nจากรายงานก่อนหน้า"
           : "Total hours\nfrom previous reports",
         String(previousTotalHours),
       ],
       [
         language === "th"
-          ? "จำนวนชม.ฝึกงานทั้งหมด\nในปัจจุบัน"
+          ? "จำนวนชม.ทั้งหมด\nปัจจุบัน"
           : "Current\ntotal hours",
         String(report.totalHours + previousTotalHours),
       ],
     ],
-    startY: summaryY,
-    theme: "grid",
+    headStyles: { fillColor: null, lineColor: [0, 0, 0], lineWidth: 0.5 },
+    bodyStyles: { fillColor: null, lineColor: [0, 0, 0], lineWidth: 0.5 },
     styles: {
+      font: "Sarabun",
       fontSize: 10,
       cellPadding: 4,
-      valign: "middle",
+      overflow: "linebreak",
     },
     columnStyles: {
-      0: { cellWidth: 120 },
-      1: { cellWidth: 40, halign: "center" },
+      0: { cellWidth: 200 },
+      1: { cellWidth: 80, halign: "center" },
     },
+    margin: { left: margin },
   });
 
-  const certY = (doc as any).lastAutoTable.finalY + 20;
-
-  // Certification block
+  // 7) Certification block
+  const certY = (doc as any).lastAutoTable.finalY + 40;
+  doc.setFontSize(12);
   doc.text(
     language === "th"
       ? "ขอรับรองว่ารายงานนี้เป็นความจริงทุกประการ"
@@ -198,38 +241,35 @@ export const exportToPdf = (
     certY,
     { align: "center" }
   );
-
   doc.text(
     language === "th"
-      ? "ลงชื่อ ................................................................................. วิศวกรผู้ควบคุม"
-      : "Supervisor signature .................................................................................",
+      ? "ลงชื่อ ........................................ วิศวกรผู้ควบคุม"
+      : "Supervisor signature ...............................",
     pageWidth / 2,
-    certY + 12,
+    certY + 20,
     { align: "center" }
   );
-
-  doc.text(`(${profile.supervisorName})`, pageWidth / 2, certY + 22, {
+  doc.text(`(${profile.supervisorName})`, pageWidth / 2, certY + 40, {
     align: "center",
   });
-
   doc.text(
     language === "th"
       ? `ตำแหน่ง ${profile.supervisorPosition}`
       : `Title: ${profile.supervisorPosition}`,
     pageWidth / 2,
-    certY + 30,
+    certY + 60,
     { align: "center" }
   );
-
   doc.text(
     language === "th"
-      ? "วันที่ ................................................................................."
-      : "Date .................................................................................",
+      ? "วันที่ ........................................................"
+      : "Date ........................................................",
     pageWidth / 2,
-    certY + 38,
+    certY + 80,
     { align: "center" }
   );
 
+  // 8) Save
   const fileName =
     language === "th"
       ? `รายงานฝึกงาน_ฉบับที่_${report.id}.pdf`

@@ -457,13 +457,13 @@ export default function ReportsPage() {
                           <FileDown className="mr-2 h-4 w-4" />
                           {language === "th" ? "DOCX" : "Export as DOCX"}
                         </Button>
-                        <Button
+                        {/* <Button
                           variant="outline"
                           onClick={() => handleExportToPdf(report)}
                         >
                           <FilePdf className="mr-2 h-4 w-4" />
                           {language === "th" ? "PDF" : "Export as PDF"}
-                        </Button>
+                        </Button> */}
                       </div>
                     </div>
 
