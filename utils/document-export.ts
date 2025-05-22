@@ -617,11 +617,11 @@ export const exportToDocx = async (
           new Paragraph({
             children: [
               new TextRun({
-                text: `         (${profile.supervisorName})`,
+                text: `(${profile.supervisorName})`,
               }),
             ],
-            alignment: AlignmentType.LEFT,
-            indent: { left: 2016 }, // 1.4 inches
+            alignment: AlignmentType.CENTER,
+            indent: { left: 936 }, // 1.4 inches
           }),
           new Paragraph({
             text:
