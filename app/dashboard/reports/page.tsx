@@ -315,7 +315,11 @@ export default function ReportsPage() {
               {language === "th" ? "EN" : "TH"}
             </Label>
           </div>
-          <Button variant="outline" onClick={togglePreview}>
+          <Button
+            variant="outline"
+            onClick={togglePreview}
+            className="hidden md:flex w-full sm:w-auto"
+          >
             {showPreview ? (
               <>
                 <EyeOff className="mr-2 h-4 w-4" />
@@ -328,6 +332,7 @@ export default function ReportsPage() {
               </>
             )}
           </Button>
+
           <Button onClick={addReport} disabled={isSaving}>
             {isSaving ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -360,86 +365,158 @@ export default function ReportsPage() {
                 </AccordionTrigger>
                 <AccordionContent>
                   <div className="space-y-4 p-2">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead className="w-[150px]">
-                            {language === "th" ? "วันที่" : "Date"}
-                          </TableHead>
-                          <TableHead className="w-[100px]">
-                            {language === "th" ? "จำนวนชั่วโมง" : "Hours"}
-                          </TableHead>
-                          <TableHead>
-                            {language === "th"
-                              ? "รายละเอียดงาน"
-                              : "Description"}
-                          </TableHead>
-                          <TableHead className="w-[50px]" />
-                        </TableRow>
-                      </TableHeader>
-
-                      <TableBody>
-                        {report.entries.map((entry) => (
-                          <TableRow key={entry.id}>
-                            <TableCell>
-                              <Input
-                                type="date"
-                                value={entry.date}
-                                onChange={(e) =>
-                                  updateEntry(
-                                    report.id,
-                                    entry.id,
-                                    "date",
-                                    e.target.value
-                                  )
-                                }
-                                className="w-full"
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <Input
-                                type="number"
-                                min={1}
-                                max={24}
-                                value={entry.hours}
-                                onChange={(e) =>
-                                  updateEntry(
-                                    report.id,
-                                    entry.id,
-                                    "hours",
-                                    e.target.value
-                                  )
-                                }
-                                className="w-full"
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <Input
-                                value={entry.description}
-                                onChange={(e) =>
-                                  updateEntry(
-                                    report.id,
-                                    entry.id,
-                                    "description",
-                                    e.target.value
-                                  )
-                                }
-                                className="w-full"
-                              />
-                            </TableCell>
-                            <TableCell className="text-right">
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => deleteEntry(report.id, entry.id)}
-                              >
-                                <Trash className="h-4 w-4 text-red-500" />
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
+                    {/* TABLE (Desktop and Tablet) */}
+                    <div className="hidden md:block">
+                      <div className="overflow-x-auto">
+                        <Table className="min-w-[700px]">
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead className="min-w-[150px]">
+                                {language === "th" ? "วันที่" : "Date"}
+                              </TableHead>
+                              <TableHead className="min-w-[100px]">
+                                {language === "th" ? "จำนวนชั่วโมง" : "Hours"}
+                              </TableHead>
+                              <TableHead className="min-w-[250px]">
+                                {language === "th"
+                                  ? "รายละเอียดงาน"
+                                  : "Description"}
+                              </TableHead>
+                              <TableHead className="min-w-[50px]" />
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {report.entries.map((entry) => (
+                              <TableRow key={entry.id}>
+                                <TableCell>
+                                  <Input
+                                    type="date"
+                                    value={entry.date}
+                                    onChange={(e) =>
+                                      updateEntry(
+                                        report.id,
+                                        entry.id,
+                                        "date",
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <Input
+                                    type="number"
+                                    value={entry.hours}
+                                    onChange={(e) =>
+                                      updateEntry(
+                                        report.id,
+                                        entry.id,
+                                        "hours",
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <Input
+                                    value={entry.description}
+                                    onChange={(e) =>
+                                      updateEntry(
+                                        report.id,
+                                        entry.id,
+                                        "description",
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                </TableCell>
+                                <TableCell className="text-right">
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() =>
+                                      deleteEntry(report.id, entry.id)
+                                    }
+                                  >
+                                    <Trash className="h-4 w-4 text-red-500" />
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    </div>
+                    {/* STACKED INPUTS (Mobile only) */}
+                    <div className="space-y-4 md:hidden">
+                      {report.entries.map((entry) => (
+                        <div
+                          key={entry.id}
+                          className="border rounded-md p-4 space-y-3"
+                        >
+                          <div>
+                            <Label>
+                              {language === "th" ? "วันที่" : "Date"}
+                            </Label>
+                            <Input
+                              type="date"
+                              value={entry.date}
+                              onChange={(e) =>
+                                updateEntry(
+                                  report.id,
+                                  entry.id,
+                                  "date",
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </div>
+                          <div>
+                            <Label>
+                              {language === "th" ? "จำนวนชั่วโมง" : "Hours"}
+                            </Label>
+                            <Input
+                              type="number"
+                              value={entry.hours}
+                              onChange={(e) =>
+                                updateEntry(
+                                  report.id,
+                                  entry.id,
+                                  "hours",
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </div>
+                          <div>
+                            <Label>
+                              {language === "th"
+                                ? "รายละเอียดงาน"
+                                : "Description"}
+                            </Label>
+                            <Input
+                              value={entry.description}
+                              onChange={(e) =>
+                                updateEntry(
+                                  report.id,
+                                  entry.id,
+                                  "description",
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </div>
+                          <div className="flex justify-end">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => deleteEntry(report.id, entry.id)}
+                            >
+                              <Trash className="h-4 w-4 text-red-500" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
 
                     <div className="flex justify-between">
                       <Button
@@ -502,13 +579,8 @@ export default function ReportsPage() {
                         </span>
                       </div>
                     </div>
-                    <div className="flex justify-between">
-                      <Button onClick={saveReportChanges} disabled={isSaving}>
-                        {isSaving ? (
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        ) : null}
-                        {language === "th" ? "บันทึกรายงาน" : "Save Report"}
-                      </Button>
+                    <div className="flex justify-between items-center gap-2 flex-wrap">
+                      {/* Delete Button (Left) */}
                       <Dialog>
                         <DialogTrigger asChild>
                           <Button
@@ -545,14 +617,26 @@ export default function ReportsPage() {
                               onClick={() => deleteReport(reportToDelete?.id!)}
                               disabled={isSaving}
                             >
-                              {isSaving ? (
+                              {isSaving && (
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                              ) : null}
+                              )}
                               {language === "th" ? "ลบรายงาน" : "Delete"}
                             </Button>
                           </DialogFooter>
                         </DialogContent>
                       </Dialog>
+
+                      {/* Save Button (Right) */}
+                      <Button
+                        onClick={saveReportChanges}
+                        disabled={isSaving}
+                        className="ml-auto"
+                      >
+                        {isSaving && (
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        )}
+                        {language === "th" ? "บันทึกรายงาน" : "Save Report"}
+                      </Button>
                     </div>
                   </div>
                 </AccordionContent>
@@ -562,7 +646,7 @@ export default function ReportsPage() {
         </div>
 
         {shouldShowPreview && (
-          <div className="transition-all duration-300 ease-in-out">
+          <div className="hidden lg:block">
             <Card className="sticky top-4">
               <CardContent className="p-4">
                 <div className="space-y-4">
