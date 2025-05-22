@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import type React from "react"
-import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
-import { useSession, signOut } from "next-auth/react"
+import type React from "react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
 import {
   Sidebar,
   SidebarContent,
@@ -13,16 +13,16 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarProvider,
-} from "@/components/ui/sidebar"
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+} from "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,65 +33,75 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { UserCircle, FileText, LayoutDashboard, LogOut, User, Trash } from "lucide-react"
-import { Skeleton } from "@/components/ui/skeleton"
-import { useToast } from "@/components/ui/use-toast"
-import { useState } from "react"
-import { Loader2 } from "lucide-react"
+} from "@/components/ui/alert-dialog";
+import {
+  UserCircle,
+  FileText,
+  LayoutDashboard,
+  LogOut,
+  User,
+  Trash,
+} from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/components/ui/use-toast";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 // Add the deleteAccount function inside the component
 export default function DashboardLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  const pathname = usePathname()
-  const { data: session, status } = useSession()
-  const { toast } = useToast()
-  const router = useRouter()
-  const [isDeleting, setIsDeleting] = useState(false)
+  const pathname = usePathname();
+  const { data: session, status } = useSession();
+  const { toast } = useToast();
+  const router = useRouter();
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleSignOut = async () => {
-    await signOut({ callbackUrl: "/" })
-  }
+    await signOut({ callbackUrl: "/" });
+  };
 
   const deleteAccount = async () => {
     try {
-      setIsDeleting(true)
+      setIsDeleting(true);
       const response = await fetch("/api/user", {
         method: "DELETE",
-      })
+      });
 
       if (response.ok) {
         toast({
           title: "บัญชีถูกลบเรียบร้อยแล้ว",
-          description: "บัญชีและข้อมูลทั้งหมดของคุณถูกลบออกจากระบบเรียบร้อยแล้ว",
-        })
-        await signOut({ callbackUrl: "/" })
+          description:
+            "บัญชีและข้อมูลทั้งหมดของคุณถูกลบออกจากระบบเรียบร้อยแล้ว",
+        });
+        await signOut({ callbackUrl: "/" });
       } else {
-        throw new Error("Failed to delete account")
+        throw new Error("Failed to delete account");
       }
     } catch (error) {
       toast({
         title: "เกิดข้อผิดพลาด",
         description: "ไม่สามารถลบบัญชีได้ กรุณาลองใหม่อีกครั้ง",
         variant: "destructive",
-      })
+      });
     } finally {
-      setIsDeleting(false)
+      setIsDeleting(false);
     }
-  }
+  };
 
   // Get user initials for avatar fallback
   const getUserInitials = () => {
-    if (!session?.user?.name) return "U"
+    if (!session?.user?.name) return "U";
 
-    const nameParts = session.user.name.split(" ")
-    if (nameParts.length === 1) return nameParts[0].charAt(0).toUpperCase()
+    const nameParts = session.user.name.split(" ");
+    if (nameParts.length === 1) return nameParts[0].charAt(0).toUpperCase();
 
-    return (nameParts[0].charAt(0) + nameParts[nameParts.length - 1].charAt(0)).toUpperCase()
-  }
+    return (
+      nameParts[0].charAt(0) + nameParts[nameParts.length - 1].charAt(0)
+    ).toUpperCase();
+  };
 
   // Update the dropdown menu to include the delete account option
   return (
@@ -116,28 +126,43 @@ export default function DashboardLayout({
                 </span>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    <Button
+                      variant="ghost"
+                      className="relative h-8 w-8 rounded-full"
+                    >
                       <Avatar className="h-8 w-8">
-                        <AvatarImage src={session?.user?.image || ""} alt={session?.user?.name || "User"} />
+                        <AvatarImage
+                          src={session?.user?.image || ""}
+                          alt={session?.user?.name || "User"}
+                        />
                         <AvatarFallback>{getUserInitials()}</AvatarFallback>
                       </Avatar>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem asChild>
-                      <Link href="/dashboard/profile" className="flex items-center">
+                      <Link
+                        href="/dashboard/profile"
+                        className="flex items-center"
+                      >
                         <User className="mr-2 h-4 w-4" />
                         <span>ข้อมูลส่วนตัว</span>
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={handleSignOut} className="text-red-500">
+                    <DropdownMenuItem
+                      onClick={handleSignOut}
+                      className="text-red-500"
+                    >
                       <LogOut className="mr-2 h-4 w-4" />
                       <span>ออกจากระบบ</span>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
-                        <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="text-red-500">
+                        <DropdownMenuItem
+                          onSelect={(e) => e.preventDefault()}
+                          className="text-red-500"
+                        >
                           <Trash className="mr-2 h-4 w-4" />
                           <span>ลบบัญชี</span>
                         </DropdownMenuItem>
@@ -146,7 +171,8 @@ export default function DashboardLayout({
                         <AlertDialogHeader>
                           <AlertDialogTitle>ยืนยันการลบบัญชี</AlertDialogTitle>
                           <AlertDialogDescription>
-                            การดำเนินการนี้จะลบบัญชีและข้อมูลทั้งหมดของคุณออกจากระบบ และไม่สามารถย้อนกลับได้
+                            การดำเนินการนี้จะลบบัญชีและข้อมูลทั้งหมดของคุณออกจากระบบ
+                            และไม่สามารถย้อนกลับได้
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
@@ -187,7 +213,10 @@ export default function DashboardLayout({
             <SidebarContent>
               <SidebarMenu>
                 <SidebarMenuItem>
-                  <SidebarMenuButton asChild isActive={pathname === "/dashboard"}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname === "/dashboard"}
+                  >
                     <Link href="/dashboard">
                       <LayoutDashboard className="mr-2 h-4 w-4" />
                       <span>แดชบอร์ด</span>
@@ -195,7 +224,10 @@ export default function DashboardLayout({
                   </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
-                  <SidebarMenuButton asChild isActive={pathname === "/dashboard/profile"}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname === "/dashboard/profile"}
+                  >
                     <Link href="/dashboard/profile">
                       <UserCircle className="mr-2 h-4 w-4" />
                       <span>ข้อมูลส่วนตัว</span>
@@ -203,10 +235,24 @@ export default function DashboardLayout({
                   </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
-                  <SidebarMenuButton asChild isActive={pathname === "/dashboard/reports"}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname === "/dashboard/reports"}
+                  >
                     <Link href="/dashboard/reports">
                       <FileText className="mr-2 h-4 w-4" />
                       <span>รายงานประจำสัปดาห์</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname === "/dashboard/resources"}
+                  >
+                    <Link href="/dashboard/resources">
+                      <FileText className="mr-2 h-4 w-4" />
+                      <span>เอกสารประกอบการฝึกงาน</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -226,10 +272,12 @@ export default function DashboardLayout({
 
           {/* Page content area */}
           <main className="flex-1 overflow-auto bg-gray-50">
-            <div className="w-full min-h-full py-6 px-4 md:px-6">{children}</div>
+            <div className="w-full min-h-full py-6 px-4 md:px-6">
+              {children}
+            </div>
           </main>
         </div>
       </div>
     </SidebarProvider>
-  )
+  );
 }

@@ -1,8 +1,8 @@
-import NextAuth from "next-auth"
-import GoogleProvider from "next-auth/providers/google"
-import dbConnect from "@/lib/mongoose"
-import User from "@/models/User"
-import Profile from "@/models/Profile"
+import NextAuth from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import dbConnect from "@/lib/mongoose";
+import User from "@/models/User";
+import Profile from "@/models/Profile";
 
 export const authOptions = {
   providers: [
@@ -15,10 +15,10 @@ export const authOptions = {
     async signIn({ user, account, profile }) {
       if (account?.provider === "google") {
         try {
-          await dbConnect()
+          await dbConnect();
 
           // Check if user exists
-          const existingUser = await User.findOne({ email: user.email })
+          const existingUser = await User.findOne({ email: user.email });
 
           if (!existingUser) {
             // Create new user
@@ -26,7 +26,7 @@ export const authOptions = {
               name: user.name,
               email: user.email,
               image: user.image,
-            })
+            });
 
             // Create empty profile for the user
             await Profile.create({
@@ -41,26 +41,31 @@ export const authOptions = {
               supervisorName: "",
               supervisorPosition: "",
               department: "ภาควิชาวิศวกรรมคอมพิวเตอร์",
-            })
+            });
           }
         } catch (error) {
-          console.error("Error during sign in:", error)
-          return false
+          console.error("Error during sign in:", error);
+          return false;
         }
       }
-      return true
+      return true;
     },
     async session({ session, token }) {
       if (token.sub) {
-        session.user.id = token.sub
+        session.user.id = token.sub;
       }
-      return session
+      return session;
     },
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id
+        token.id = user.id;
       }
-      return token
+      return token;
+    },
+    redirect({ url, baseUrl }) {
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      if (url.startsWith(baseUrl)) return url;
+      return `${baseUrl}/dashboard`;
     },
   },
   pages: {
@@ -71,7 +76,7 @@ export const authOptions = {
   session: {
     strategy: "jwt",
   },
-}
+};
 
-const handler = NextAuth(authOptions)
-export { handler as GET, handler as POST }
+const handler = NextAuth(authOptions);
+export { handler as GET, handler as POST };

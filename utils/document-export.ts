@@ -263,15 +263,31 @@ export const exportToDocx = async (
     return new TableRow({
       children: [
         new TableCell({
-          children: [new Paragraph(formatDate(entry.date, language))],
+          children: [
+            new Paragraph({
+              text: formatDate(entry.date, language),
+              alignment: AlignmentType.CENTER,
+            }),
+          ],
+
           borders: allBorders,
         }),
         new TableCell({
-          children: [new Paragraph(String(entry.hours))],
+          children: [
+            new Paragraph({
+              text: String(entry.hours),
+              alignment: AlignmentType.CENTER,
+            }),
+          ],
           borders: allBorders,
         }),
         new TableCell({
-          children: [new Paragraph(entry.description)],
+          children: [
+            new Paragraph({
+              text: entry.description,
+              alignment: AlignmentType.LEFT,
+            }),
+          ],
           borders: allBorders,
         }),
         new TableCell({ children: [new Paragraph("")], borders: allBorders }),
@@ -360,11 +376,11 @@ export const exportToDocx = async (
           }),
           new Paragraph({ text: " " }),
 
-          // Main bi-weekly table
           new Table({
             width: { size: 100, type: WidthType.PERCENTAGE },
             alignment: AlignmentType.CENTER,
             rows: [
+              // Header row
               new TableRow({
                 children: headers.map(
                   (h) =>
@@ -380,6 +396,8 @@ export const exportToDocx = async (
                     })
                 ),
               }),
+
+              // Center-align every cell in entryRows
               ...entryRows,
               ...emptyRows,
             ],
